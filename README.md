@@ -1,3 +1,4 @@
+# GlowNepal_Frontend
 **GlowNepal**
 
 GlowNepal is a web-based beauty and salon appointment booking system that bridges the gap between users and their preferred stylists. The platform allows users to book appointments conveniently by selecting specific dates and times, providing a hassle-free way to manage their schedules.
@@ -77,3 +78,5 @@ GlowNepal for the web provides a robust, responsive, and user-friendly platform 
 This is Frontend for GlowNepal. Below is the Link for Backend:
 
 **Backend:**
+https://github.com/SumiSushmA/GlowNepal_Backend.git
+

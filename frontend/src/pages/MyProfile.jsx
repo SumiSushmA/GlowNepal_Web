@@ -12,39 +12,52 @@ const MyProfile = () => {
     const { utoken, backendUrl, userData, setUserData, loadUserProfileData } = useContext(AppContext);
 
 
-    // Function to update user profile data using API
     const updateUserProfileData = async () => {
-
         try {
-
-            const formData = new FormData();
-
-            formData.append('name', userData.name)
-            formData.append('phone', userData.phone)
-            formData.append('address', JSON.stringify(userData.address))
-            formData.append('gender', userData.gender)
-            formData.append('dob', userData.dob)
-
-            image && formData.append('image', image)
-
-            const { data } = await axios.post(`${backendUrl}/api/user/update-profile`, formData, { headers: { utoken } });
-
-
-            if (data.success) {
-                toast.success(data.message)
-                await loadUserProfileData()
-                setIsEdit(false)
-                setImage(false)
-            } else {
-                toast.error(data.message)
+         
+            const storedToken = localStorage.getItem("utoken");
+            const userToken = utoken || storedToken; 
+    
+            console.log("Context Token (utoken):", utoken);
+            console.log("LocalStorage Token (utoken):", storedToken);
+            console.log("Final Token Used:", userToken);
+    
+            if (!userToken) {
+                toast.error("Authentication token is missing. Please log in again.");
+                navigate("/login");
+                return;
             }
-
+    
+            const formData = new FormData();
+            formData.append('name', userData.name);
+            formData.append('phone', userData.phone);
+            formData.append('address', JSON.stringify(userData.address));
+            formData.append('gender', userData.gender);
+            formData.append('dob', userData.dob);
+    
+            if (image) {
+                formData.append('image', image);
+            }
+    
+            const { data } = await axios.post(`${backendUrl}/api/user/update-profile`, formData, {
+                headers: { utoken: userToken } 
+            });
+    
+            if (data.success) {
+                toast.success(data.message);
+                await loadUserProfileData();
+                setIsEdit(false);
+                setImage(false);
+            } else {
+                toast.error(data.message);
+            }
         } catch (error) {
-            console.log(error)
-            toast.error(error.message)
+            console.error("Update Profile Error:", error);
+            toast.error(error.response?.data?.message || "Failed to update profile. Please try again.");
         }
-
-    }
+    };
+    
+    
 
     return userData ? (
         <div className='max-w-lg flex flex-col gap-2 text-sm pt-5'>

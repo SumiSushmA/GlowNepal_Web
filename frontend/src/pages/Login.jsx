@@ -5,53 +5,48 @@
 // import { AppContext } from '../context/AppContextProvider'
 
 // const Login = () => {
-
 //   const [state, setState] = useState('Sign Up')
-
 //   const [name, setName] = useState('')
 //   const [email, setEmail] = useState('')
 //   const [password, setPassword] = useState('')
 
 //   const navigate = useNavigate()
-//   const { backendUrl, token, setToken } = useContext(AppContext)
+//   const { backendUrl, token, setToken, loadUserProfileData } = useContext(AppContext)
 
 //   const onSubmitHandler = async (event) => {
 //     event.preventDefault();
 
 //     try {
+//       let response;
 //       if (state === 'Sign Up') {
-//         const { data } = await axios.post(backendUrl + '/api/user/register', { name, email, password })
-
-//         if (data.success) {
-//           localStorage.setItem('token', data.token)
-//           setToken(data.token)
-//           toast.success('Account created successfully!')
-//         } else {
-//           toast.error(data.message)
-//         }
-
+//         response = await axios.post(`${backendUrl}/api/user/register`, { name, email, password })
 //       } else {
-//         const { data } = await axios.post(backendUrl + '/api/user/login', { email, password })
-
-//         if (data.success) {
-//           localStorage.setItem('token', data.token)
-//           setToken(data.token)
-//           toast.success('Logged in successfully!')
-//         } else {
-//           toast.error(data.message)
-//         }
+//         response = await axios.post(`${backendUrl}/api/user/login`, { email, password })
 //       }
+
+//       const { data } = response;
+
+//       if (data.success) {
+//         toast.success(state === 'Sign Up' ? 'Account created successfully!' : 'Logged in successfully!');
+//         localStorage.setItem('token', data.token);
+//         setToken(data.token);
+        
+//         // await loadUserProfileData(data.token); // Load user profile after setting token
+//       } else {
+//         toast.error(data.message);
+//       }
+
 //     } catch (error) {
-//       console.log(error)
-//       toast.error('Something went wrong. Please try again!')
+//       console.error(error);
+//       toast.error(error.response?.data?.message || "Something went wrong. Please try again!");
 //     }
 //   }
 
 //   useEffect(() => {
-//     if (token) {
-//       navigate('/')
+//     if (token && !email) { // Ensures navigation only after profile is loaded
+//       navigate('/');
 //     }
-//   }, [token])
+//   }, [token]);
 
 //   return (
 //     <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center'>
@@ -60,18 +55,18 @@
 //         <p>Please {state === 'Sign Up' ? 'sign up' : 'log in'} to book an appointment</p>
 
 //         {state === 'Sign Up' && (
-//           <div className='w-full '>
+//           <div className='w-full'>
 //             <p>Full Name</p>
 //             <input onChange={(e) => setName(e.target.value)} value={name} className='border border-[#DADADA] rounded w-full p-2 mt-1' type="text" required />
 //           </div>
 //         )}
 
-//         <div className='w-full '>
+//         <div className='w-full'>
 //           <p>Email</p>
 //           <input onChange={(e) => setEmail(e.target.value)} value={email} className='border border-[#DADADA] rounded w-full p-2 mt-1' type="email" required />
 //         </div>
 
-//         <div className='w-full '>
+//         <div className='w-full'>
 //           <p>Password</p>
 //           <input onChange={(e) => setPassword(e.target.value)} value={password} className='border border-[#DADADA] rounded w-full p-2 mt-1' type="password" required />
 //         </div>
@@ -90,23 +85,23 @@
 //   )
 // }
 
-// export default Login
+// export default Login;
 
 
-import axios from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import { AppContext } from '../context/AppContextProvider'
+import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { AppContext } from '../context/AppContextProvider';
 
 const Login = () => {
-  const [state, setState] = useState('Sign Up')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [state, setState] = useState('Sign Up');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const navigate = useNavigate()
-  const { backendUrl, token, setToken, loadUserProfileData } = useContext(AppContext)
+  const navigate = useNavigate();
+  const { backendUrl, token, setToken, loadUserProfileData } = useContext(AppContext);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -114,9 +109,9 @@ const Login = () => {
     try {
       let response;
       if (state === 'Sign Up') {
-        response = await axios.post(`${backendUrl}/api/user/register`, { name, email, password })
+        response = await axios.post(`${backendUrl}/api/user/register`, { name, email, password });
       } else {
-        response = await axios.post(`${backendUrl}/api/user/login`, { email, password })
+        response = await axios.post(`${backendUrl}/api/user/login`, { email, password });
       }
 
       const { data } = response;
@@ -125,8 +120,6 @@ const Login = () => {
         toast.success(state === 'Sign Up' ? 'Account created successfully!' : 'Logged in successfully!');
         localStorage.setItem('token', data.token);
         setToken(data.token);
-        
-        await loadUserProfileData(data.token); // Load user profile after setting token
       } else {
         toast.error(data.message);
       }
@@ -135,10 +128,10 @@ const Login = () => {
       console.error(error);
       toast.error(error.response?.data?.message || "Something went wrong. Please try again!");
     }
-  }
+  };
 
   useEffect(() => {
-    if (token && !email) { // Ensures navigation only after profile is loaded
+    if (token && !email) {
       navigate('/');
     }
   }, [token]);
@@ -173,11 +166,14 @@ const Login = () => {
         {state === 'Sign Up' ? (
           <p>Already have an account? <span onClick={() => setState('Login')} className='text-primary underline cursor-pointer'>Login here</span></p>
         ) : (
-          <p>Don't have an account? <span onClick={() => setState('Sign Up')} className='text-primary underline cursor-pointer'>Sign up here</span></p>
+          <>
+            <p>Don't have an account? <span onClick={() => setState('Sign Up')} className='text-primary underline cursor-pointer'>Sign up here</span></p>
+            <p>Wanna Recover Password? <span onClick={() => navigate('/password-forgot')} className='text-primary underline cursor-pointer'>Recover Password here</span></p>
+          </>
         )}
       </div>
     </form>
-  )
-}
+  );
+};
 
 export default Login;

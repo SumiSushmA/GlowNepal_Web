@@ -24,7 +24,7 @@ const MyAppointments = () => {
     // Getting User Bookings Data Using API
     const getUserBookings = async () => {
         try {
-            const { data } = await axios.get(backendUrl + '/api/user/bookings', { headers: { token } })
+            const { data } = await axios.get(backendUrl + '/api/user/appointments', { headers: { utoken: token } })
             setBookings(data.bookings.reverse())
         } catch (error) {
             console.log(error)
@@ -35,7 +35,7 @@ const MyAppointments = () => {
     // Function to cancel a booking using API
     const cancelBooking = async (bookingId) => {
         try {
-            const { data } = await axios.post(backendUrl + '/api/user/cancel-booking', { bookingId }, { headers: { token } })
+            const { data } = await axios.post(backendUrl + '/api/user/cancel-booking', { bookingId }, { headers: { utoken: token } })
             if (data.success) {
                 toast.success(data.message)
                 getUserBookings()
@@ -59,7 +59,7 @@ const MyAppointments = () => {
             receipt: order.receipt,
             handler: async (response) => {
                 try {
-                    const { data } = await axios.post(backendUrl + "/api/user/verifyRazorpay", response, { headers: { token } });
+                    const { data } = await axios.post(backendUrl + "/api/user/verifyRazorpay", response, { headers: { utoken: token } });
                     if (data.success) {
                         navigate('/my-appointments')
                         getUserBookings()
@@ -77,7 +77,7 @@ const MyAppointments = () => {
     // Function to make payment using Razorpay
     const bookingRazorpay = async (bookingId) => {
         try {
-            const { data } = await axios.post(backendUrl + '/api/user/payment-razorpay', { bookingId }, { headers: { token } })
+            const { data } = await axios.post(backendUrl + '/api/user/payment-razorpay', { bookingId }, { headers: { utoken: token } })
             if (data.success) {
                 initPay(data.order)
             } else {
@@ -92,7 +92,7 @@ const MyAppointments = () => {
     // Function to make payment using Stripe
     const bookingStripe = async (bookingId) => {
         try {
-            const { data } = await axios.post(backendUrl + '/api/user/payment-stripe', { bookingId }, { headers: { token } })
+            const { data } = await axios.post(backendUrl + '/api/user/payment-stripe', { bookingId }, { headers: { utoken: token } })
             if (data.success) {
                 const { session_url } = data
                 window.location.replace(session_url)

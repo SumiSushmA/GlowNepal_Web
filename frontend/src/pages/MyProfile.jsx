@@ -9,8 +9,8 @@ const MyProfile = () => {
     const [isEdit, setIsEdit] = useState(false)
 
     const [image, setImage] = useState(false)
+    const { utoken, backendUrl, userData, setUserData, loadUserProfileData } = useContext(AppContext);
 
-    const { token, backendUrl, userData, setUserData, loadUserProfileData } = useContext(AppContext)
 
     // Function to update user profile data using API
     const updateUserProfileData = async () => {
@@ -27,7 +27,8 @@ const MyProfile = () => {
 
             image && formData.append('image', image)
 
-            const { data } = await axios.post(backendUrl + '/api/user/update-profile', formData, { headers: { token } })
+            const { data } = await axios.post(`${backendUrl}/api/user/update-profile`, formData, { headers: { utoken } });
+
 
             if (data.success) {
                 toast.success(data.message)

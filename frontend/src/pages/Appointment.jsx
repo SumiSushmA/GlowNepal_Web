@@ -101,7 +101,7 @@ const Appointment = () => {
 
         try {
 
-            const { data } = await axios.post(backendUrl + '/api/user/book-appointment', { stylistId, slotDate, slotTime }, { headers: { token } })
+            const { data } = await axios.post(backendUrl + '/api/user/book-appointment', { stylistId, slotDate, slotTime }, { headers: { utoken: token } })
             if (data.success) {
                 toast.success(data.message)
                 getStylistsData()
@@ -186,3 +186,5 @@ const Appointment = () => {
 }
 
 export default Appointment
+
+

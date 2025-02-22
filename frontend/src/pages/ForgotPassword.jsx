@@ -17,7 +17,7 @@ userRouter.post("/forget-password", async (req, res) => {
     }
 });
 
-const PasswordForgot = () => {
+const PasswordForget = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [bookings, setBookings] = useState([]);
@@ -80,5 +80,5 @@ const PasswordForgot = () => {
     );
 };
 
-export { PasswordForgot, userRouter };
+export { PasswordForget, userRouter };
 

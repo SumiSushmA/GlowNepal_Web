@@ -54,7 +54,7 @@ GlowNepal is a web-based beauty and salon appointment booking system that bridge
 
 3. Environment Variable
 
-4. Run the Application (npm start)
+4. Run the Application (npm run dev)
 
 
 
